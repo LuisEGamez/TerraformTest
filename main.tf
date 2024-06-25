@@ -16,9 +16,16 @@ module "ec2" {
 }
 
 module "elb" {
-  source      = "./modules/elb"
-  vpc_id      = module.vpc.vpc_id
-  instance_id = module.ec2.ec2_id
+  source              = "./modules/elb"
+  vpc_id              = module.vpc.vpc_id
+  instance_id         = module.ec2.ec2_id
   private_subnets_ids = module.vpc.private_subnets_ids
 }
+
+#module "nat_gateway" {
+#  source           = "./modules/vpc/nat_gateway"
+#  public_subnet_id = module.vpc.public_subnet_id
+#  vpc_id           = module.vpc.vpc_id
+#  private_subnets_ids = module.vpc.private_subnets_ids
+#}
 
