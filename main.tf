@@ -29,3 +29,6 @@ module "elb" {
 #  private_subnets_ids = module.vpc.private_subnets_ids
 #}
 
+module "cognito" {
+  source = "./modules/cognito"
+}

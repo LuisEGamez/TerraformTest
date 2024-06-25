@@ -14,3 +14,7 @@ output "elb_dns_name" {
   value = module.elb.elb_dns_name
 }
 
+output "cognito_user_pool_id" {
+  value = module.cognito.pool_id
+}
+
