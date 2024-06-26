@@ -1,3 +1,18 @@
+module "remote_state" {
+  source  = "nozaq/remote-state-s3-backend/aws"
+  version = "1.5.0"
+
+  terraform_iam_policy_create = false
+
+  # Academy doesn't allow S3 replication
+  enable_replication = false
+
+  providers = {
+    aws         = aws
+    aws.replica = aws
+  }
+}
+
 module "vpc" {
   source = "./modules/vpc"
 }
