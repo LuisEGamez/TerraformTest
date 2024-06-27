@@ -79,3 +79,74 @@ resource "aws_cognito_user_pool" "users2" {
     sms_message           = null
   }
 }
+
+resource "aws_cognito_user_pool_client" "app_user" {
+  access_token_validity                         = 60
+  allowed_oauth_flows                           = []
+  allowed_oauth_flows_user_pool_client          = false
+  allowed_oauth_scopes                          = []
+  auth_session_validity                         = 3
+  callback_urls                                 = []
+  default_redirect_uri                          = null
+  enable_propagate_additional_user_context_data = false
+  enable_token_revocation                       = true
+  explicit_auth_flows = [
+    "ALLOW_REFRESH_TOKEN_AUTH",
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_USER_SRP_AUTH",
+  ]
+  id_token_validity             = 60
+  logout_urls                   = []
+  name                          = "app-user"
+  prevent_user_existence_errors = "ENABLED"
+  read_attributes = [
+    "address",
+    "birthdate",
+    "email",
+    "email_verified",
+    "family_name",
+    "gender",
+    "given_name",
+    "locale",
+    "middle_name",
+    "name",
+    "nickname",
+    "phone_number",
+    "phone_number_verified",
+    "picture",
+    "preferred_username",
+    "profile",
+    "updated_at",
+    "website",
+    "zoneinfo",
+  ]
+  refresh_token_validity       = 30
+  supported_identity_providers = []
+  user_pool_id                 = "us-east-1_85qWTSXDm"
+  write_attributes = [
+    "address",
+    "birthdate",
+    "email",
+    "family_name",
+    "gender",
+    "given_name",
+    "locale",
+    "middle_name",
+    "name",
+    "nickname",
+    "phone_number",
+    "picture",
+    "preferred_username",
+    "profile",
+    "updated_at",
+    "website",
+    "zoneinfo",
+  ]
+
+  token_validity_units {
+    access_token  = "minutes"
+    id_token      = "minutes"
+    refresh_token = "days"
+  }
+
+}
