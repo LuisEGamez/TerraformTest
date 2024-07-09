@@ -17,3 +17,13 @@ output "elb_dns_name" {
   description = "The DNS name of the ELB"
   value       = aws_lb.users-lb.dns_name
 }
+
+output "votes_tg_arn" {
+  description = "The ID of the votes target group"
+  value = aws_lb_target_group.votes-tg.arn
+}
+
+output "votes_nlb_dns_name" {
+  description = "The DNS name of the NLB"
+  value = aws_lb.users-lb.dns_name
+}

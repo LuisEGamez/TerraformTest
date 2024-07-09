@@ -33,3 +33,7 @@ variable "elb_security_group_id" {
   description = "The id of elb security group"
   type        = string
 }
+variable "votes_tg_arn" {
+  description = "The id of the votes target group"
+  type        = string
+}

@@ -28,21 +28,23 @@ module "ec2" {
   public_subnet_ip      = module.vpc.public_subnet_id
   private_subnets_ids   = module.vpc.private_subnets_ids
   elb_security_group_id = module.elb.elb_security_group_id
+  votes_tg_arn          = module.elb.votes_tg_arn
 }
 
 module "elb" {
   source              = "./modules/elb"
   vpc_id              = module.vpc.vpc_id
-  users_instance_id         = module.ec2.ec2_id
+  users_instance_id         = module.ec2.users_ec2_id
   private_subnets_ids = module.vpc.private_subnets_ids
+  votes_launch_template_id = module.ec2.votes_launch_template_id
 }
 
-#module "nat_gateway" {
-#  source           = "./modules/vpc/nat_gateway"
-#  public_subnet_id = module.vpc.public_subnet_id
-#  vpc_id           = module.vpc.vpc_id
-#  private_subnets_ids = module.vpc.private_subnets_ids
-#}
+module "nat_gateway" {
+  source           = "./modules/vpc/nat_gateway"
+  public_subnet_id = module.vpc.public_subnet_id
+  vpc_id           = module.vpc.vpc_id
+  private_subnets_ids = module.vpc.private_subnets_ids
+}
 
 module "cognito" {
   source = "./modules/cognito"
