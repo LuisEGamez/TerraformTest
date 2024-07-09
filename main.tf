@@ -33,7 +33,7 @@ module "ec2" {
 module "elb" {
   source              = "./modules/elb"
   vpc_id              = module.vpc.vpc_id
-  instance_id         = module.ec2.ec2_id
+  users_instance_id         = module.ec2.ec2_id
   private_subnets_ids = module.vpc.private_subnets_ids
 }
 

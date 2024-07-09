@@ -17,7 +17,7 @@ variable "vpc_id" {
   description = "The id of the VPC"
   type        = string
 }
-variable "instance_id" {
+variable "users_instance_id" {
   description = "The id of the instance to attach to the ELB"
   type        = string
 }

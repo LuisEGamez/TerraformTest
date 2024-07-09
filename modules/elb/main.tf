@@ -1,13 +1,13 @@
 resource "aws_lb_target_group" "users-tg2" {
   name     = "${var.prefix}-users-lb-tg-2${var.suffix}"
   port     = 8080
-  protocol = "HTTP"
+  protocol = "TCP"
   vpc_id   = var.vpc_id
 }
 
 resource "aws_lb_target_group_attachment" "users-tg-attachment" {
   target_group_arn = aws_lb_target_group.users-tg2.arn
-  target_id        = var.instance_id
+  target_id        = var.users_instance_id
   port             = 8080
 }
 
@@ -40,9 +40,9 @@ resource "aws_security_group" "euro-vota-sg" {
 }
 
 resource "aws_lb" "users-lb" {
-  name               = "${var.prefix}-users-lb-${var.suffix}"
+  name               = "${var.prefix}-users-nlb-${var.suffix}"
   internal           = true
-  load_balancer_type = "application"
+  load_balancer_type = "network"
   security_groups    = [aws_security_group.euro-vota-sg.id]
   subnets            = [for subnet_id in var.private_subnets_ids : subnet_id]
 
@@ -50,14 +50,14 @@ resource "aws_lb" "users-lb" {
 
 
   tags = {
-    Name = "${var.prefix}-users-lb-${var.suffix}"
+    Name = "${var.prefix}-users-nlb-${var.suffix}"
   }
 }
 
 resource "aws_lb_listener" "users-lb-listener" {
   load_balancer_arn = aws_lb.users-lb.arn
   port              = "80"
-  protocol          = "HTTP"
+  protocol          = "TCP"
 
   default_action {
     type             = "forward"
