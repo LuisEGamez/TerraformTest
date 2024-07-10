@@ -8,10 +8,10 @@ output "sg_id" {
   value       = module.ec2.sg_id
 }
 
-output "ec2_id" {
+/*output "ec2_id" {
   description = "The ID of the EC2 instance"
   value       = module.ec2.users_ec2_id
-}
+}*/
 
 output "elb_dns_name" {
   description = "The DNS name of the ELB"

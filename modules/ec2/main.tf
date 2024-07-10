@@ -82,8 +82,8 @@ resource "local_file" "private_key" {
   filename = "${path.module}/users-${var.suffix}.pem"
 }
 
-resource "aws_key_pair" "users-key" {
-  key_name   = "users-key"
+resource "aws_key_pair" "bastion-key" {
+  key_name   = "bastion-key"
   public_key = tls_private_key.users.public_key_openssh
 }
 
@@ -93,7 +93,7 @@ resource "aws_instance" "bastion-tf" {
   subnet_id     = var.public_subnet_ip
   vpc_security_group_ids = [aws_security_group.bastion-tf-sg.id]
   associate_public_ip_address = true
-  key_name = aws_key_pair.users-key.key_name
+  key_name = aws_key_pair.bastion-key.key_name
   iam_instance_profile = var.instance_profile_name
   tags = {
     Name = "${var.prefix}-bastion-${var.suffix}"
@@ -104,7 +104,7 @@ resource "aws_eip" "bastion_eip" {
   instance = aws_instance.bastion-tf.id
 }
 
-
+/*
 resource "aws_instance" "users-tf" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
@@ -115,7 +115,7 @@ resource "aws_instance" "users-tf" {
   tags = {
     Name = "${var.prefix}-users-${var.suffix}"
   }
-}
+}*/
 
 resource "aws_security_group" "votes-tf-sg" {
   name        = "votes-tf-sg"
@@ -132,10 +132,10 @@ resource "aws_security_group" "votes-tf-sg" {
 
   ingress {
     description = "HTTP app security group."
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 9002
+    to_port     = 9002
     protocol    = "tcp"
-    security_groups = [var.elb_security_group_id] // Todo change this
+    security_groups = [var.elb_security_group_id] // Todo change this to the votes nlb security group
   }
 
   egress {
@@ -150,22 +150,12 @@ resource "aws_security_group" "votes-tf-sg" {
   }
 }
 
-resource "aws_instance" "votes-tf" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
-  subnet_id     = var.private_subnets_ids[1]
-  vpc_security_group_ids = [aws_security_group.users-tf-sg.id]
-  key_name = aws_key_pair.users-key.key_name
-  iam_instance_profile = var.instance_profile_name
-  tags = {
-    Name = "${var.prefix}-users-${var.suffix}"
-  }
-}
-
 resource "aws_launch_template" "votes-launch-template" {
   name     = "${var.prefix}-votes-launch-template-${var.suffix}"
   instance_type = "t3.micro"
   image_id = data.aws_ami.ubuntu.id
+  key_name = aws_key_pair.bastion-key.key_name
+  update_default_version = true
 
   iam_instance_profile {
     name = var.instance_profile_name
@@ -182,38 +172,7 @@ resource "aws_launch_template" "votes-launch-template" {
     }
   }
 
-  user_data = base64encode(<<EOF
-    #!/bin/sh
-
-    #!/bin/bash
-    wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-    sudo apt update
-    sudo apt-get -y install make apt-transport-https ca-certificates curl gnupg2 software-properties-common jq  cgroup-tools tree terraform
-
-    # Add Docker's official GPG key:
-    sudo apt-get update
-    sudo apt-get install ca-certificates curl
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-    # Add the repository to Apt sources:
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-
-    sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-    usermod -aG docker ubuntu
-    sudo snap install --classic aws-cli
-    aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 273440013219.dkr.ecr.us-east-1.amazonaws.com
-    sudo docker run -d -p 9002:9002 --restart unless-stopped --name votes 273440013219.dkr.ecr.us-east-1.amazonaws.com/votes:latest
-    reboot
-    EOF
-  )
+  user_data = filebase64("${path.module}/init.sh")
 
   tag_specifications {
     resource_type = "instance"

@@ -3,15 +3,15 @@ resource "aws_eip" "nat_gateway_eip" {
 
 
 resource "aws_nat_gateway" "user_nat_gateway" {
-  allocation_id                  = aws_eip.nat_gateway_eip.id
-  subnet_id                      = var.public_subnet_id
+  allocation_id = aws_eip.nat_gateway_eip.id
+  subnet_id     = var.public_subnet_id
 }
 
 resource "aws_route_table" "private" {
   vpc_id = var.vpc_id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.user_nat_gateway.id
   }
 

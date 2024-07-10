@@ -17,12 +17,12 @@ variable "vpc_id" {
   description = "The id of the VPC"
   type        = string
 }
-variable "users_instance_id" {
+/*variable "users_instance_id" {
   description = "The id of the instance to attach to the ELB"
   type        = string
-}
+}*/
 variable "votes_launch_template_id" {
-  description = "The id of the launch template to attach to the ELB"
+  description = "The id of the votes launch template to attach to the ELB"
   type        = string
 }
 variable "private_subnets_ids" {

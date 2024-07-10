@@ -5,11 +5,11 @@ resource "aws_lb_target_group" "users-tg2" {
   vpc_id   = var.vpc_id
 }
 
-resource "aws_lb_target_group_attachment" "users-tg-attachment" {
+/*resource "aws_lb_target_group_attachment" "users-tg-attachment" {
   target_group_arn = aws_lb_target_group.users-tg2.arn
   target_id        = var.users_instance_id
   port             = 8080
-}
+}*/
 
 resource "aws_security_group" "euro-vota-sg" {
   name = "euro-vota-sg-${var.suffix}"
@@ -81,12 +81,6 @@ resource "aws_lb_target_group" "votes-tg" {
     protocol            = "HTTP"
   }
 
-}
-
-resource "aws_lb_target_group_attachment" "votes-tg-attachment" {
-  target_group_arn = aws_lb_target_group.votes-tg.arn
-  target_id        = var.votes_launch_template_id
-  port             = 9002
 }
 
 resource "aws_lb" "votes-nlb" {
