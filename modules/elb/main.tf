@@ -1,8 +1,18 @@
 resource "aws_lb_target_group" "users-tg2" {
   name     = "${var.prefix}-users-lb-tg-2${var.suffix}"
-  port     = 8080
+  port     = 9000
   protocol = "TCP"
   vpc_id   = var.vpc_id
+
+  health_check {
+    interval            = 30
+    port                = "traffic-port"
+    path                = "/actuator/health"
+    timeout             = 10
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    protocol            = "HTTP"
+  }
 }
 
 /*resource "aws_lb_target_group_attachment" "users-tg-attachment" {

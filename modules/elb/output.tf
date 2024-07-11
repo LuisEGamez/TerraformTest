@@ -18,8 +18,13 @@ output "elb_dns_name" {
   value       = aws_lb.users-lb.dns_name
 }
 
+output "users_tg_arn" {
+  description = "The arn of the users target group"
+  value = aws_lb_target_group.users-tg2.arn
+}
+
 output "votes_tg_arn" {
-  description = "The ID of the votes target group"
+  description = "The arn of the votes target group"
   value = aws_lb_target_group.votes-tg.arn
 }
 

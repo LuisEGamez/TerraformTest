@@ -37,3 +37,7 @@ variable "votes_tg_arn" {
   description = "The id of the votes target group"
   type        = string
 }
+variable "users_tg_arn" {
+  description = "The id of the users target group"
+  type        = string
+}

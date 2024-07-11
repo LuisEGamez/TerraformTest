@@ -29,12 +29,12 @@ module "ec2" {
   private_subnets_ids   = module.vpc.private_subnets_ids
   elb_security_group_id = module.elb.elb_security_group_id
   votes_tg_arn          = module.elb.votes_tg_arn
+  users_tg_arn          = module.elb.users_tg_arn
 }
 
 module "elb" {
   source                   = "./modules/elb"
   vpc_id                   = module.vpc.vpc_id
-  //users_instance_id        = module.ec2.users_ec2_id
   private_subnets_ids      = module.vpc.private_subnets_ids
   votes_launch_template_id = module.ec2.votes_launch_template_id
 }
