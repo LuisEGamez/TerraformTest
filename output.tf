@@ -8,18 +8,18 @@ output "sg_id" {
   value       = module.ec2.sg_id
 }
 
-/*output "ec2_id" {
+/*output.tf "ec2_id" {
   description = "The ID of the EC2 instance"
   value       = module.ec2.users_ec2_id
 }*/
 
-output "elb_dns_name" {
-  description = "The DNS name of the ELB"
-  value       = module.elb.elb_dns_name
+output "users_nlb_dns_name" {
+  description = "The DNS name of users NLB"
+  value       = module.elb.users_nlb_dns
 }
 
-output "elb_arn" {
-  description = "The name of the ELB"
+output "votes_nlb_dns_name" {
+  description = "The DNS name of votes NLB"
   value       = module.elb.votes_nlb_dns_name
 }
 
@@ -41,5 +41,10 @@ output "state_bucket" {
 output "dynamodb_table" {
   description = "The DynamoDB table used to store the lock"
   value       = module.remote_state.dynamodb_table.id
+}
+
+output "api_gateway_stage_url" {
+  description = "The url of the API Gateway stage"
+  value       = module.api_gateway.api_gateway_stage_url
 }
 
