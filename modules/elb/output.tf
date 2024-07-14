@@ -22,6 +22,10 @@ output "votes_tg_arn" {
   value = aws_lb_target_group.votes-tg.arn
 }
 
+output "votes_nlb_arn" {
+  value = aws_lb.votes-nlb.arn
+}
+
 output "votes_nlb_dns_name" {
   description = "The DNS name of the NLB"
   value = aws_lb.votes-nlb.dns_name

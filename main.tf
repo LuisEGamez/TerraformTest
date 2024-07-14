@@ -55,4 +55,6 @@ module "api_gateway" {
   users_nlb_arn = module.elb.users_nlb_arn
   users_nlb_dns = module.elb.users_nlb_dns
   user_pool_arn = module.cognito.pool_arn
+  votes_nlb_arn = module.elb.votes_nlb_arn
+  votes_nlb_dns = module.elb.votes_nlb_dns_name
 }
