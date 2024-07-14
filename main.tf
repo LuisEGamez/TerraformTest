@@ -54,4 +54,5 @@ module "api_gateway" {
   source = "./modules/api_gateway"
   users_nlb_arn = module.elb.users_nlb_arn
   users_nlb_dns = module.elb.users_nlb_dns
+  user_pool_arn = module.cognito.pool_arn
 }
