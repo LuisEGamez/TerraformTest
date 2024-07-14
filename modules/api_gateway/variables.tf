@@ -17,5 +17,5 @@ variable "user_pool_arn" {
 
 variable "redeploy" {
     description = "Change this to redeploy the API Gateway resources"
-    default = true
+    default = false
 }

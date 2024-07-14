@@ -18,7 +18,6 @@ resource "aws_api_gateway_method" "get_method" {
   http_method   = "GET"
   resource_id   = aws_api_gateway_resource.eurovota_api_get_by_id.id
   rest_api_id   = var.rest_api_id
-  //"authorization_scopes": [],
   authorizer_id = var.authorizer_id
   request_parameters = {
     "method.request.header.Authorization" : true,
@@ -35,7 +34,6 @@ resource "aws_api_gateway_integration" "get_integration" {
   uri                     = "${var.protocol_type}${var.users_nlb_dns}/${var.parent_path}/${aws_api_gateway_resource.eurovota_api_id_get_by_id.path_part}/${aws_api_gateway_resource.eurovota_api_get_by_id.path_part}"
   integration_http_method = "GET"
   passthrough_behavior    = "WHEN_NO_MATCH"
-  //content_handling        = "CONVERT_TO_TEXT"
 
   connection_type = "VPC_LINK"
   connection_id   = var.eurovota_users_vpc_link
