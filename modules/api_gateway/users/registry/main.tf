@@ -63,6 +63,10 @@ resource "aws_api_gateway_method_response" "registry_response_200" {
     "application/json" : "Empty"
   }
 
+  response_parameters = {
+    "method.response.header.Location" : true
+  }
+
 }
 
 resource "aws_api_gateway_integration_response" "registry_integration_response_200" {
@@ -73,6 +77,10 @@ resource "aws_api_gateway_integration_response" "registry_integration_response_2
   }
   rest_api_id = var.rest_api_id
   status_code = aws_api_gateway_method_response.registry_response_200.status_code
+
+  response_parameters = {
+    "method.response.header.Location" : "integration.response.header.Location"
+  }
 }
 
 resource "aws_api_gateway_method_response" "registry_response_400" {
